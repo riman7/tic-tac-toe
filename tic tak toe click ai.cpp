@@ -26,11 +26,12 @@ void design()
 	line(240-1,220,240-1,460);
 
     settextstyle(10,0,2);
-    int h=textheight("By Shivam");
-    w=textwidth("By Shivam");
-    outtextxy(400-w-5,600-h,"By Shivam");
+    int h=textheight("By Riman Maharjan and Sufal KC...");
+    w=textwidth("By Riman Maharjan and Sufal KC...");
+    outtextxy(400-w-5,600-h,"By Riman Maharjan and Sufal KC...");
 }
 
+//Turn 1 = x, 0 = O
 void dis(int turn, int p)
 {
     settextstyle(10,0,6);
@@ -43,10 +44,12 @@ void dis(int turn, int p)
         h=textheight("O");
         w=textwidth("O");
     }
+    //space on each side of O or X (for centering)
     int x=(80-w)/2;
     int y=(80-h)/2;
     switch(p)
     {
+    	//Turn 1 = x, 0 = O
         case 1:
             if(turn==1)
                 outtextxy(x+80,y+220,"X");
@@ -103,8 +106,6 @@ void dis(int turn, int p)
             break;
 
     }
-
-
 }
 
 int fun(char *a){
@@ -129,8 +130,9 @@ int fun(char *a){
         return 2;
     return 0;
 }
-
+//a => array of state of board(O X 0)
 void computer(char *a,int turn){
+	//cnt-> O cell count, p-> empty cell count
     int cnt[8],p[8];
     for(int i=0;i<8;i++){
         cnt[i]=0;p[i]=-1;
@@ -139,12 +141,17 @@ void computer(char *a,int turn){
     for(int i=0;i<9;i++){
         if(a[i]=='O'){
             cnt[i/3]++;
+            //cnt 0,1,2 for horizontal
             cnt[3+i%3]++;
+            //cnt 3,4,5 for vertiacal
             if(i%4==0)
                 cnt[6]++;
+            //cnt 6 for 1st diagnoal
             if(i==2 || i==4 || i==6)
                 cnt[7]++;
+            //cnt 7 for 2nd diagonal
         }
+        //empty cell record
         else if(a[i]==0){
             p[i/3]=i;
             p[3+i%3]=i;
@@ -154,6 +161,7 @@ void computer(char *a,int turn){
                 p[7]=i;
         }
     }
+    //attack
     for(int i=0;i<8;i++){
         if(cnt[i]==2 && p[i]!=-1){
             dis(0,p[i]+1);
@@ -189,74 +197,13 @@ void computer(char *a,int turn){
         }
         p[i]=-1;cnt[i]=0;
     }
+    //center choice
     if(a[4]==0){
         dis(0,5);
         a[4]='O';
         return;
     }
-    if(turn==1){
-        dis(0,1);
-        a[0]='O';
-        return;
-    }
-    if(turn==3){
-        if(a[4]=='X'){
-            dis(0,3);
-            a[2]='O';
-            return;
-        }
-        p[0]=p[1]=-1;int j=0;
-        for(int i=0;i<9;i++)
-            if(a[i]=='X')
-                p[j++]=i;
-        if((p[0]==3 && p[1]==5) || (p[0]==2 && p[1]==7)){
-            dis(0,1);
-            a[0]='O';
-            return;
-        }
-        if(p[0]+p[1]==8){
-            dis(0,2);
-            a[1]='O';
-            return;
-        }
-        if(p[0]==0 || p[0]==1){
-            if(p[1]==5 || p[1]==8){
-                dis(0,3);
-                a[2]='O';
-                return;
-            }
-            else if(p[1]==3 || p[1]==6){
-                dis(0,1);
-                a[0]='O';
-                return;
-            }
-            else{
-                dis(0,7);
-                a[6]='O';
-                return;
-            }
-        }
-        else if(p[0]==1 || p[0]==2){
-            if(p[1]==3 || p[1]==6){
-                dis(0,1);
-                a[0]='O';
-                return;
-            }
-            else{
-                dis(0,9);
-                a[8]='O';
-                return;
-            }
-        }
-        else if(p[0]==3){
-            dis(0,7);
-            a[6]='O';
-            return;
-        }
-        dis(0,9);
-        a[8]='O';
-        return;
-    }
+    //if none is matching
     for(int i=0;i<9;i++){
         if(a[i]==0){
             dis(0,1+i);
@@ -269,8 +216,11 @@ void computer(char *a,int turn){
 int main()
 {
     //Tic Tac Toe
+    start:
     initwindow(400,600,"Tic Tac Toe");
+    
     design();
+    //x= 0 no result 1 player 1 2 player 2
     int x=0;
     POINT pos;
     int turn=0;
@@ -362,17 +312,63 @@ int main()
         settextstyle(10,0,3);
         int w=textwidth("You Wins !!");
         outtextxy((400-w)/2,500,"You Wins !!");
+        w=textwidth("Play Again");
+        int h=textheight("Play Again");
+        outtextxy((400-w)/2,522,"Play again");
+        while(true){
+	        if(GetAsyncKeyState(VK_LBUTTON))
+	        {
+	            GetCursorPos(&pos);
+	            long X=mousex();
+	            long Y=mousey();
+	            if(X>(400-w)/2&& X<((400-w)/2)+w && Y>522-h && Y< 522+h){
+	            	goto start;
+	            	break;
+				}
+	        }
     }
+}
     else if(x==2){
         settextstyle(10,0,3);
         int w=textwidth("Computer Wins !!");
         outtextxy((400-w)/2,500,"Computer Wins !!");
+        w=textwidth("Play Again");
+        int h=textheight("Play Again");
+        outtextxy((400-w)/2,522,"Play again");
+        while(true){
+	        if(GetAsyncKeyState(VK_LBUTTON))
+	        {
+	            GetCursorPos(&pos);
+	            long X=mousex();
+	            long Y=mousey();
+	            if(X>(400-w)/2&& X<((400-w)/2)+w && Y>522-h && Y< 522+h){
+	            	goto start;
+	            	break;
+				}
+	        }
     }
+}
     else if(x==0){
         settextstyle(10,0,3);
         int w=textwidth("Its a Draw !!");
         outtextxy((400-w)/2,500,"Its a Draw !!");
+        w=textwidth("Play Again");
+        int h=textheight("Play Again");
+        outtextxy((400-w)/2,522,"Play again");
+        while(true){
+	        if(GetAsyncKeyState(VK_LBUTTON))
+	        {
+	            GetCursorPos(&pos);
+	            long X=mousex();
+	            long Y=mousey();
+	            if(X>(400-w)/2&& X<((400-w)/2)+w && Y>522-h && Y< 522+h){
+	            	goto start;
+	            	break;
+				}
+	        }
+	
     }
+}
     getch();
     return 0;
 }
