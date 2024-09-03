@@ -217,10 +217,11 @@ int main()
 {
     //Tic Tac Toe
     start:
+    //400pixel in x-axis and 600 pixel in y-axis dialogue will init
     initwindow(400,600,"Tic Tac Toe");
-    
+    //create layout of cpp using defined function using cpp
     design();
-    //x= 0 no result 1 player 1 2 player 2
+    //x= 0 no-result, 1-player 1, 2-player 2
     int x=0;
     POINT pos;
     int turn=0;
